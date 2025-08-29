@@ -11,7 +11,7 @@ import { FiToggleLeft } from "react-icons/fi";
 import axios from "axios";
 
 const Dashboard2 = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
   const [users, setUsers] = useState([]);
   const [newUser, setNewUser] = useState({ name: "", email: "" });
   const [editingUser, setEditingUser] = useState(null);

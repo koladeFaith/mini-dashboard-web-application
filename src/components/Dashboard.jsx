@@ -27,8 +27,24 @@ const schema = yup.object().shape({
 
 const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isDark, setIsDark] = useState(false);
   const [users, setUsers] = useState([]);
   const [editingUser, setEditingUser] = useState(null);
+  // Toggle between light and dark themes.
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+      setIsDark(savedTheme === "dark");
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+  }, [isDark]);
+
+  const toggleTheme = () => {
+    setIsDark(!isDark);
+  };
 
   //  Hook Form
   const {
@@ -96,11 +112,25 @@ const Dashboard = () => {
   };
   return (
     <>
-      <div className="flex relative h-screen bg-gray-100">
+      <div
+        className={`flex relative h-screen bg-gray-100 ${
+          isDark ? "bg-gray-800 text-white" : "bg-white"
+        } `}>
         {/* Sidebar (desktop) */}
-        <aside className="hidden md:flex w-64 fixed inset-y-0 left-0 z-10 md:w-64 md:flex-col md:bg-white md:shadow-lg">
-          <div className="py-[18px] px-6 font-bold border-b">Logo</div>
-          <nav className="flex-1 p-4 space-y-2">
+        <aside
+          className={`hidden md:flex w-64 fixed inset-y-0 left-0 z-10 md:w-64 md:flex-col md:bg-white md:shadow-lg ${
+            isDark ? "bg-gray-700" : "bg-white"
+          }`}>
+          <div
+            className={`py-[18px] px-7  font-bold border-b ${
+              isDark ? "border-b-black" : "border-b-white"
+            }`}>
+            Logo
+          </div>
+          <nav
+            className={`flex-1 p-4 space-y-2 ${
+              isDark ? "bg-gray-700 text-white" : "bg-white"
+            }`}>
             <a href="#" className="block p-2 rounded hover:bg-gray-100">
               Dashboard
             </a>
@@ -143,17 +173,22 @@ const Dashboard = () => {
         {/* Main content */}
         <div className="flex flex-1 flex-col">
           {/* Topbar */}
-          <header className="flex fixed top-0 left-0 right-0 z-20 items-center justify-between bg-white px-5 md:px-4 py-3 shadow ">
+          <header
+            className={`flex fixed top-0 left-0 right-0 z-20 items-center justify-between bg-gray-500 px-5 md:px-5 py-3 shadow ${
+              isDark ? "bg-gray-700 text-white" : "bg-white"
+            } `}>
             <FaList
               onClick={() => setSidebarOpen(true)}
               className="text-xl md:hidden"
             />
-            <h1 className="font-bold text-[20px]">Logo</h1>
-            <div className="flex justify-center gap-1 md:gap-3 items-center text-xl">
-              <div className="bg-gray-100 p-2 rounded-full">
-                <FaUser className="text-xl" />
+            <h1 className="font-bold text-[20px] md:pl-1">Logo</h1>
+            <div className="flex justify-center md:mr-4 gap-2 md:gap-3 items-center text-xl">
+              <div className="bg-gray-100 p-2  rounded-full">
+                <FaUser
+                  className={`text-xl ${isDark ? "text-black" : "bg-white"}`}
+                />
               </div>{" "}
-              <FiToggleLeft className="text-xl" />
+              <FiToggleLeft className="text-2xl" onClick={toggleTheme} />
             </div>
           </header>
           {/* Main content */}
@@ -172,7 +207,9 @@ const Dashboard = () => {
               <input
                 type="text"
                 placeholder="Search..."
-                className="w-full pl-10 pr-4 py-2 border bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className={`w-full pl-10 pr-4 py-2 border bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                  isDark ? "text-black" : "bg-white"
+                }`}
               />
               <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             </div>
@@ -186,7 +223,9 @@ const Dashboard = () => {
                   type="text"
                   placeholder="Name"
                   {...register("name")}
-                  className="border p-2 rounded"
+                  className={`border border-bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white p-2 rounded ${
+                    isDark ? "text-black" : "bg-white"
+                  }`}
                 />
                 {errors.name && (
                   <p className="text-red-500 text-sm mt-1">
@@ -199,7 +238,9 @@ const Dashboard = () => {
                   type="text"
                   placeholder="Title"
                   {...register("title")}
-                  className="border p-2 rounded"
+                  className={`border border-bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white p-2 rounded ${
+                    isDark ? "text-black" : "bg-white"
+                  }`}
                 />
                 {errors.title && (
                   <p className="text-red-500 text-sm mt-1">
@@ -212,7 +253,9 @@ const Dashboard = () => {
                   type="text"
                   placeholder="Content"
                   {...register("content")}
-                  className="border p-2 rounded"
+                  className={`border border-bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white p-2 rounded ${
+                    isDark ? "text-black" : "bg-white"
+                  }`}
                 />
                 {errors.content && (
                   <p className="text-red-500 text-sm mt-1">
@@ -225,7 +268,9 @@ const Dashboard = () => {
                   type="email"
                   placeholder="Email"
                   {...register("email")}
-                  className="border p-2 rounded"
+                  className={`border border-bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white p-2 rounded ${
+                    isDark ? "text-black" : "bg-white"
+                  }`}
                 />
                 {errors.email && (
                   <p className="text-red-500 text-sm mt-1">
