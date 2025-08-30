@@ -78,7 +78,7 @@ const Dashboard = () => {
       }`}>
       {/* Sidebar */}
       <Sidebar
-        isDark={isDark}
+        isDark={isDark} //
         sidebarOpen={sidebarOpen}
         setSidebarOpen={setSidebarOpen}
       />
