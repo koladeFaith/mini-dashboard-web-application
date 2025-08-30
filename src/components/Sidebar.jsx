@@ -36,7 +36,10 @@ const Sidebar = ({ isDark, sidebarOpen, setSidebarOpen }) => {
             className="fixed inset-0 bg-black/50"
             onClick={() => setSidebarOpen(false)}
           />
-          <aside className="relative z-50 w-64 bg-white shadow-lg">
+          <aside
+            className={`relative z-50 w-64  shadow-lg ${
+              isDark ? "bg-gray-800" : "bg-gray-100"
+            }`}>
             <div className="p-4 flex justify-between items-center border-b font-bold">
               Logo
               <FaTimes onClick={() => setSidebarOpen(false)} />

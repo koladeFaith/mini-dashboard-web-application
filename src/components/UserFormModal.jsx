@@ -11,7 +11,7 @@ const schema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Email is required"),
 });
 
-const UserFormModal = ({ isOpen, onClose, onAddUser }) => {
+const UserFormModal = ({ isOpen, onClose, onAddUser, isDark }) => {
   // ✅ Use React Hook Form with Yup
   const {
     register,
@@ -31,9 +31,12 @@ const UserFormModal = ({ isOpen, onClose, onAddUser }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
-        <h2 className="text-xl font-bold mb-4">Add New User</h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+      <div
+        className={` rounded-lg shadow-lg w-full max-w-md p-6 ${
+          isDark ? "bg-gray-800" : "bg-gray-100"
+        }`}>
+        <h2 className="text-xl font-bold mb-4  ">Add New User</h2>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {/* Name Field */}

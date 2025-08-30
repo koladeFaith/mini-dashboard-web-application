@@ -50,7 +50,7 @@ const Dashboard = () => {
     );
     setUsers([response.data, ...users]);
   };
-// Update
+  // Update
   const updateUser = async (updatedUser) => {
     const response = await axios.put(
       `https://jsonplaceholder.typicode.com/users/${updatedUser.id}`,
@@ -58,7 +58,7 @@ const Dashboard = () => {
     );
     setUsers(users.map((u) => (u.id === updatedUser.id ? response.data : u)));
   };
-// Delete
+  // Delete
   const deleteUser = async (id) => {
     await axios.delete(`https://jsonplaceholder.typicode.com/users/${id}`);
     setUsers(users.filter((u) => u.id !== id));
@@ -142,6 +142,7 @@ const Dashboard = () => {
         isOpen={addUserForm}
         onClose={() => setAddUserForm(false)}
         onAddUser={addUser}
+        isDark={isDark}
       />
       <UserEditModal
         isOpen={!!editingUser}
