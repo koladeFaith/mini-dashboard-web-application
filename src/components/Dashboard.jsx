@@ -6,7 +6,6 @@ import UserEditModal from "./UserEditModal";
 import UserFormModal from "./UserFormModal";
 import { FaSearch } from "react-icons/fa";
 import Sidebar from "./SideBar";
-
 const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [addUserForm, setAddUserForm] = useState(false);
