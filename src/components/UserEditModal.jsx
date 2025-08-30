@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
 
-const UserEditModal = ({ isOpen, onClose, onUpdateUser, user }) => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-  });
+const UserEditModal = ({ isOpen, onClose, user, onUpdateUser }) => {
+  const [formData, setFormData] = useState({ name: "", email: "" });
 
-  // preload the form when editing a user
+  // Fill form when a user is selected
   useEffect(() => {
     if (user) {
       setFormData({
@@ -25,10 +22,13 @@ const UserEditModal = ({ isOpen, onClose, onUpdateUser, user }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.email) return;
 
-    onUpdateUser(user.id, formData); // ✅ call Dashboard update
-    onClose();
+    if (!formData.name || !formData.email) return; // validation
+
+    // Call the update function from Dashboard
+    onUpdateUser({ ...user, ...formData });
+
+    onClose(); // close modal
   };
 
   if (!isOpen) return null;
@@ -46,6 +46,7 @@ const UserEditModal = ({ isOpen, onClose, onUpdateUser, user }) => {
               value={formData.name}
               onChange={handleChange}
               className="w-full p-2 border rounded"
+              placeholder="Enter name"
             />
           </div>
           <div>
@@ -56,18 +57,19 @@ const UserEditModal = ({ isOpen, onClose, onUpdateUser, user }) => {
               value={formData.email}
               onChange={handleChange}
               className="w-full p-2 border rounded"
+              placeholder="Enter email"
             />
           </div>
           <div className="flex justify-end gap-2">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 bg-gray-400 text-white rounded">
+              className={`px-4 py-2 rounded-lg bg-gray-400 text-white `}>
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-green-500 text-white rounded">
+              className="px-4 py-2 rounded-lg bg-blue-500 text-white">
               Save
             </button>
           </div>
