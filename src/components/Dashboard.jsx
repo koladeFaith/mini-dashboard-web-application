@@ -14,6 +14,7 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { Link } from "react-router-dom";
 
 const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
@@ -24,12 +25,13 @@ const schema = yup.object().shape({
     .email("Enter a valid email")
     .required("Email is required"),
 });
-
 const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [addUserForm, setAddUserForm] = useState(false);
   const [isDark, setIsDark] = useState(false);
   const [users, setUsers] = useState([]);
   const [editingUser, setEditingUser] = useState(null);
+
   // Toggle between light and dark themes.
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -66,6 +68,7 @@ const Dashboard = () => {
       const response = await axios.get(
         "https://jsonplaceholder.typicode.com/users"
       );
+      console.log(response);
       setUsers(response.data);
     } catch (error) {
       console.log("Error fetching users", error);
@@ -131,13 +134,19 @@ const Dashboard = () => {
             className={`flex-1 p-4 space-y-2 ${
               isDark ? "bg-gray-700 text-white" : "bg-white"
             }`}>
-            <a href="#" className="block p-2 rounded hover:bg-gray-100">
+            <a
+              href="#"
+              className="block p-2 text-[17px] rounded hover:bg-gray-100">
               Dashboard
             </a>
-            <a href="#" className="block p-2 rounded hover:bg-gray-100">
+            <a
+              href="#"
+              className="block p-2 text-[17px] rounded hover:bg-gray-100">
               Users
             </a>
-            <a href="#" className="block p-2 rounded hover:bg-gray-100">
+            <a
+              href="#"
+              className="block p-2 text-[17px] rounded hover:bg-gray-100">
               Settings
             </a>
           </nav>
@@ -152,18 +161,24 @@ const Dashboard = () => {
 
             {/* Sidebar panel */}
             <aside className="relative z-50 w-64 bg-white shadow-lg">
-              <div className="p-4 font-bold border-b flex justify-between items-center">
+              <div className="p-4 pl-6 font-bold border-b text-[18px] flex justify-between items-center">
                 Logo
                 <FaTimes onClick={() => setSidebarOpen(false)} />
               </div>
               <nav className="p-4 space-y-2">
-                <a href="#" className="block p-2 rounded hover:bg-gray-100">
+                <a
+                  href="#"
+                  className="block p-2 text-[18px] rounded hover:bg-gray-100">
                   Dashboard
                 </a>
-                <a href="#" className="block p-2 rounded hover:bg-gray-100">
+                <a
+                  href="#"
+                  className="block p-2 text-[18px] rounded hover:bg-gray-100">
                   Users
                 </a>
-                <a href="#" className="block p-2 rounded hover:bg-gray-100">
+                <a
+                  href="#"
+                  className="block p-2 text-[18px] rounded hover:bg-gray-100">
                   Settings
                 </a>
               </nav>
@@ -192,13 +207,13 @@ const Dashboard = () => {
             </div>
           </header>
           {/* Main content */}
-          <main className="flex-1 p-4 md:mx-6 overflow-y-auto pt-23 md:pl-64 min-h-screen">
+          <main className="flex-1 bg-gray-100 p-4 md:mx-6 overflow-y-auto pt-23 md:pl-64 min-h-screen">
             <div className="flex flex-col gap-5 md:flex-row justify-between">
               <h2 className="text-2xl font-bold">Users</h2>
               <button
                 className="rounded-xl px-4 py-2 bg-blue-500 text-white"
-                onClick={fetchUsers}>
-                Refresh Users
+                onClick={() => setAddUserForm(true)}>
+                Add New Users
               </button>
             </div>
 
@@ -207,15 +222,15 @@ const Dashboard = () => {
               <input
                 type="text"
                 placeholder="Search..."
-                className={`w-full pl-10 pr-4 py-2 border bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-                  isDark ? "text-black" : "bg-white"
+                className={`w-full pl-10 pr-4 py-2 border bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                  isDark ? "text-white bg-gray-700 border-gray-700" : "bg-white"
                 }`}
               />
               <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             </div>
 
             {/* Add New User Form with Yup validation */}
-            <form
+            {/* <form
               onSubmit={handleSubmit(addUser)}
               className="flex gap-2 mb-6 flex-wrap">
               <div className="flex flex-col w-1/3 min-w-[200px]">
@@ -283,12 +298,163 @@ const Dashboard = () => {
                 className="px-4 py-2 bg-blue-500 text-white rounded self-end">
                 Add
               </button>
-            </form>
+            </form> */}
+            {addUserForm && (
+              <div
+                className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+               >
+                <div
+                  className={`rounded-lg shadow-xl w-full max-w-md p-6 ${
+                    isDark ? "bg-gray-800" : "bg-white"
+                  }`}
+                  onClick={(e) => e.stopPropagation()}>
+                  <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-xl font-bold">
+                      {/* {user ? "Edit User" : "Add New User"} */}
+                    </h2>
+                    <button
+                      // onClick={onClose}
+                      className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                      <svg
+                        className="w-6 h-6"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M6 18L18 6M6 6l12 12"></path>
+                      </svg>
+                    </button>
+                  </div>
 
+                  <form
+                    // onSubmit={handleSubmit(handleFormSubmit)}
+                    className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Name
+                      </label>
+                      <input
+                        {...register("name")}
+                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white ${
+                          errors.name
+                            ? "border-red-500"
+                            : "border-gray-300 dark:border-gray-600"
+                        }`}
+                      />
+                      {errors.name && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.name.message}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Email
+                      </label>
+                      <input
+                        {...register("email")}
+                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white ${
+                          errors.email
+                            ? "border-red-500"
+                            : "border-gray-300 dark:border-gray-600"
+                        }`}
+                      />
+                      {errors.email && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.email.message}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Username
+                      </label>
+                      <input
+                        {...register("username")}
+                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white ${
+                          errors.username
+                            ? "border-red-500"
+                            : "border-gray-300 dark:border-gray-600"
+                        }`}
+                      />
+                      {errors.username && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.username.message}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Phone
+                      </label>
+                      <input
+                        {...register("phone")}
+                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white ${
+                          errors.phone
+                            ? "border-red-500"
+                            : "border-gray-300 dark:border-gray-600"
+                        }`}
+                      />
+                      {errors.phone && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.phone.message}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Website
+                      </label>
+                      <input
+                        {...register("website")}
+                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white ${
+                          errors.website
+                            ? "border-red-500"
+                            : "border-gray-300 dark:border-gray-600"
+                        }`}
+                      />
+                      {errors.website && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.website.message}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="flex justify-end space-x-3 pt-4">
+                      <button
+                        type="button"
+                        // onClick={onClose}
+                        className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors">
+                        {/* {user ? "Update" : "Create"} User  */} User
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
             {/* Users Display (same as before) */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {users.map((user) => (
-                <div key={user.id} className="bg-white p-4 shadow rounded">
+                <div
+                  key={user.id}
+                  className={`bg-gray-700 p-4 shadow rounded ${
+                    isDark
+                      ? "text-white bg-gray-700 border-gray-700"
+                      : "bg-white"
+                  }`}>
                   {editingUser?.id === user.id ? (
                     <>
                       <input
@@ -351,7 +517,7 @@ const Dashboard = () => {
                       <h3 className="font-bold text-lg">{user.name}</h3>
                       <p className="font-bold text-lg">{user.title}</p>
                       <p className="font-bold text-lg">{user.content}</p>
-                      <p className="text-gray-600">{user.email}</p>
+                      <p className="text-gray-800">{user.email}</p>
                       <div className="flex gap-3 mt-3">
                         <FaEdit
                           className="text-blue-500 cursor-pointer"
