@@ -15,6 +15,8 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Link } from "react-router-dom";
+import UserEditModal from "./UserEditModal";
+import UserFormModal from "./UserFormModal";
 
 const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
@@ -83,6 +85,7 @@ const Dashboard = () => {
         data
       );
       setUsers([response.data, ...users]);
+      setAddUserForm(false);
       // Reset form after submit
       reset();
     } catch (error) {
@@ -207,7 +210,10 @@ const Dashboard = () => {
             </div>
           </header>
           {/* Main content */}
-          <main className="flex-1 bg-gray-100 p-4 md:mx-6 overflow-y-auto pt-23 md:pl-64 min-h-screen">
+          <main
+            className={`flex-1 bg-gray-100 p-4 md:mx-6 overflow-y-auto pt-23 md:pl-64 min-h-screen ${
+              isDark ? "bg-gray-800" : "bg-gray-100"
+            }`}>
             <div className="flex flex-col gap-5 md:flex-row justify-between">
               <h2 className="text-2xl font-bold">Users</h2>
               <button
@@ -230,119 +236,35 @@ const Dashboard = () => {
             </div>
 
             {/* Add New User Form with Yup validation */}
-            {/* <form
-              onSubmit={handleSubmit(addUser)}
-              className="flex gap-2 mb-6 flex-wrap">
-              <div className="flex flex-col w-1/3 min-w-[200px]">
-                <input
-                  type="text"
-                  placeholder="Name"
-                  {...register("name")}
-                  className={`border border-bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white p-2 rounded ${
-                    isDark ? "text-black" : "bg-white"
-                  }`}
-                />
-                {errors.name && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.name.message}
-                  </p>
-                )}
-              </div>{" "}
-              <div className="flex flex-col w-1/3 min-w-[200px]">
-                <input
-                  type="text"
-                  placeholder="Title"
-                  {...register("title")}
-                  className={`border border-bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white p-2 rounded ${
-                    isDark ? "text-black" : "bg-white"
-                  }`}
-                />
-                {errors.title && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.title.message}
-                  </p>
-                )}
-              </div>{" "}
-              <div className="flex flex-col w-1/3 min-w-[200px]">
-                <input
-                  type="text"
-                  placeholder="Content"
-                  {...register("content")}
-                  className={`border border-bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white p-2 rounded ${
-                    isDark ? "text-black" : "bg-white"
-                  }`}
-                />
-                {errors.content && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.content.message}
-                  </p>
-                )}
-              </div>
-              <div className="flex flex-col w-1/3 min-w-[200px]">
-                <input
-                  type="email"
-                  placeholder="Email"
-                  {...register("email")}
-                  className={`border border-bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white p-2 rounded ${
-                    isDark ? "text-black" : "bg-white"
-                  }`}
-                />
-                {errors.email && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.email.message}
-                  </p>
-                )}
-              </div>
-              <button
-                type="submit"
-                className="px-4 py-2 bg-blue-500 text-white rounded self-end">
-                Add
-              </button>
-            </form> */}
+
             {addUserForm && (
               <div
                 className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
-               >
+                onClick={() => setAddUserForm(false)}>
                 <div
                   className={`rounded-lg shadow-xl w-full max-w-md p-6 ${
                     isDark ? "bg-gray-800" : "bg-white"
                   }`}
                   onClick={(e) => e.stopPropagation()}>
                   <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-xl font-bold">
-                      {/* {user ? "Edit User" : "Add New User"} */}
-                    </h2>
+                    <h2 className="text-xl font-bold">Add New User</h2>
                     <button
-                      // onClick={onClose}
+                      onClick={() => setAddUserForm(false)}
                       className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-                      <svg
-                        className="w-6 h-6"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M6 18L18 6M6 6l12 12"></path>
-                      </svg>
+                      ✕
                     </button>
                   </div>
 
-                  <form
-                    // onSubmit={handleSubmit(handleFormSubmit)}
-                    className="space-y-4">
+                  <form onSubmit={handleSubmit(addUser)} className="space-y-4">
+                    {/* Name */}
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      <label className="block text-sm font-medium mb-1">
                         Name
                       </label>
                       <input
                         {...register("name")}
-                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white ${
-                          errors.name
-                            ? "border-red-500"
-                            : "border-gray-300 dark:border-gray-600"
+                        className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 ${
+                          errors.name ? "border-red-500" : "border-gray-300"
                         }`}
                       />
                       {errors.name && (
@@ -351,17 +273,49 @@ const Dashboard = () => {
                         </p>
                       )}
                     </div>
-
+                    {/* Title */}
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      <label className="block text-sm font-medium mb-1">
+                        Title
+                      </label>
+                      <input
+                        {...register("title")}
+                        className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 ${
+                          errors.title ? "border-red-500" : "border-gray-300"
+                        }`}
+                      />
+                      {errors.title && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.title.message}
+                        </p>
+                      )}
+                    </div>{" "}
+                    {/* Content */}
+                    <div>
+                      <label className="block text-sm font-medium mb-1">
+                        Content
+                      </label>
+                      <input
+                        {...register("content")}
+                        className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 ${
+                          errors.content ? "border-red-500" : "border-gray-300"
+                        }`}
+                      />
+                      {errors.content && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.content.message}
+                        </p>
+                      )}
+                    </div>
+                    {/* Email */}
+                    <div>
+                      <label className="block text-sm font-medium mb-1">
                         Email
                       </label>
                       <input
                         {...register("email")}
-                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white ${
-                          errors.email
-                            ? "border-red-500"
-                            : "border-gray-300 dark:border-gray-600"
+                        className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 ${
+                          errors.email ? "border-red-500" : "border-gray-300"
                         }`}
                       />
                       {errors.email && (
@@ -370,75 +324,12 @@ const Dashboard = () => {
                         </p>
                       )}
                     </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        Username
-                      </label>
-                      <input
-                        {...register("username")}
-                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white ${
-                          errors.username
-                            ? "border-red-500"
-                            : "border-gray-300 dark:border-gray-600"
-                        }`}
-                      />
-                      {errors.username && (
-                        <p className="text-red-500 text-sm mt-1">
-                          {errors.username.message}
-                        </p>
-                      )}
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        Phone
-                      </label>
-                      <input
-                        {...register("phone")}
-                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white ${
-                          errors.phone
-                            ? "border-red-500"
-                            : "border-gray-300 dark:border-gray-600"
-                        }`}
-                      />
-                      {errors.phone && (
-                        <p className="text-red-500 text-sm mt-1">
-                          {errors.phone.message}
-                        </p>
-                      )}
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        Website
-                      </label>
-                      <input
-                        {...register("website")}
-                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white ${
-                          errors.website
-                            ? "border-red-500"
-                            : "border-gray-300 dark:border-gray-600"
-                        }`}
-                      />
-                      {errors.website && (
-                        <p className="text-red-500 text-sm mt-1">
-                          {errors.website.message}
-                        </p>
-                      )}
-                    </div>
-
+                    {/* Buttons */}
                     <div className="flex justify-end space-x-3 pt-4">
                       <button
-                        type="button"
-                        // onClick={onClose}
-                        className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                        Cancel
-                      </button>
-                      <button
                         type="submit"
-                        className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors">
-                        {/* {user ? "Update" : "Create"} User  */} User
+                        className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                        Add
                       </button>
                     </div>
                   </form>
@@ -450,7 +341,7 @@ const Dashboard = () => {
               {users.map((user) => (
                 <div
                   key={user.id}
-                  className={`bg-gray-700 p-4 shadow rounded ${
+                  className={`bg-gray-700 p-4 shadow rounded hover:transform hover:-translate-y-1 hover:shadow-lg ${
                     isDark
                       ? "text-white bg-gray-700 border-gray-700"
                       : "bg-white"
@@ -514,10 +405,19 @@ const Dashboard = () => {
                     </>
                   ) : (
                     <>
-                      <h3 className="font-bold text-lg">{user.name}</h3>
-                      <p className="font-bold text-lg">{user.title}</p>
-                      <p className="font-bold text-lg">{user.content}</p>
-                      <p className="text-gray-800">{user.email}</p>
+                      <h3
+                        className={`font-bold text-lg  ${
+                          isDark ? "text-gray-300 " : "bg-white"
+                        }`}>
+                        {user.name}
+                      </h3>
+                      <p className="font-bold text-lg text-gray-400 ">
+                        {user.title}
+                      </p>
+                      <p className="font-bold text-lg text-gray-400 ">
+                        {user.content}
+                      </p>
+                      <p className="text-gray-400 font-bold">{user.email}</p>
                       <div className="flex gap-3 mt-3">
                         <FaEdit
                           className="text-blue-500 cursor-pointer"
